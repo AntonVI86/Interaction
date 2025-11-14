@@ -21,4 +21,9 @@ public class CharacterMover : IMoveable
 
         _rigidbody.position += inputByCameraDirection * Time.deltaTime * Speed;
     }
+
+    public void ResetVelocity()
+    {
+        throw new System.NotImplementedException();
+    }
 }

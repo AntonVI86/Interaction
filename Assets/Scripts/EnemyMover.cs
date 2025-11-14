@@ -16,4 +16,10 @@ public class EnemyMover : IMoveable
     {
         _rigidbody.velocity = direction * Speed;
     }
+
+    public void ResetVelocity()
+    {
+        _rigidbody.velocity = Vector3.zero;
+        _rigidbody.angularVelocity = Vector3.zero;
+    }
 }

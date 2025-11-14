@@ -4178,7 +4178,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _animator: {fileID: 4385993098424868679}
-  _deathVfx: {fileID: 0}
+  _sphereCollider: {fileID: -3397254804397358669}
 --- !u!54 &-5215925799386328157
 Rigidbody:
   m_ObjectHideFlags: 0

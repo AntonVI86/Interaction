@@ -10,9 +10,9 @@ public class EscapeState : IState
     private IMoveable _mover;
     private IRotator _rotator;
 
-    private float _maxDistanceToEscape = 5f;
+    private float _maxDistanceToEscape;
 
-    public EscapeState(Transform target, Transform transform, IMoveable mover, IRotator rotator, Animator animator)
+    public EscapeState(Transform target, Transform transform, IMoveable mover, IRotator rotator, Animator animator, float maxDistanceToEscape)
     {
         _target = target;
         _transform = transform;
@@ -21,15 +21,18 @@ public class EscapeState : IState
         _rotator = rotator;
 
         _animator = animator;
+
+        _maxDistanceToEscape = maxDistanceToEscape;
     }
 
     public void ApplyState()
     {
         Vector3 direction = _target.position - _transform.position;
 
-        if (direction.magnitude > _maxDistanceToEscape)
+        if (direction.magnitude >= _maxDistanceToEscape)
         {           
             _animator.Play(AnimationKeys.AfraidAnimationKey);
+            _mover.ResetVelocity();
             return;
         }
 

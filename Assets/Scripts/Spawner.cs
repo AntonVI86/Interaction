@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -23,10 +22,9 @@ public class Spawner : MonoBehaviour
 
             EnemyStateHandler enemy = Instantiate(_enemyPrefabs[enemyIndex], point.transform.position, Quaternion.identity);
 
-            enemy.SetPatrolPoints(point);
             SetState(enemy, point);
 
-            enemy.Initialize(_idleState, _actionState, _target, point.transform);
+            enemy.Initialize(_idleState, _actionState);
         }
     }
 
@@ -54,7 +52,7 @@ public class Spawner : MonoBehaviour
                 _actionState = new ChaseState(_target.transform, enemy.transform, enemy.Mover, enemy.Rotator, enemy.AnimatorPlayer);
                 break;
             case ActionTypes.Escape:
-                _actionState = new EscapeState(_target.transform, enemy.transform, enemy.Mover, enemy.Rotator, enemy.AnimatorPlayer);
+                _actionState = new EscapeState(_target.transform, enemy.transform, enemy.Mover, enemy.Rotator, enemy.AnimatorPlayer, enemy.MaxDistanceToEscape);
                 break;
             case ActionTypes.Death:
                 _actionState = new DeathState(enemy.gameObject, enemy.AnimatorPlayer);

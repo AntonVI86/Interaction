@@ -4,15 +4,12 @@ using UnityEngine;
 public class EnemyStateHandler : MonoBehaviour
 {
     [SerializeField] private Animator _animator;
-
-    private List<Transform> _patrolPoints = new();
-    private Transform _defaultPoint;
+    [SerializeField] private SphereCollider _sphereCollider;
 
     private IMoveable _mover;
     private IRotator _rotator;
 
     private Rigidbody _rigidbody;
-    private PlayerCharacter _target;
 
     private float _speed = 3f;
 
@@ -24,6 +21,7 @@ public class EnemyStateHandler : MonoBehaviour
     public Animator AnimatorPlayer => _animator;
     public IMoveable Mover => _mover;
     public IRotator Rotator => _rotator;
+    public float MaxDistanceToEscape => _sphereCollider.radius;
 
     private void Awake() 
     {
@@ -36,29 +34,19 @@ public class EnemyStateHandler : MonoBehaviour
     private void Update() =>
         _currentState.ApplyState();
 
-    public void Initialize(IState idleState, IState actionState, PlayerCharacter target, Transform defaultPoint)
+    public void Initialize(IState idleState, IState actionState)
     {
-        _target = target;
-        _defaultPoint = defaultPoint;
-
         _idleState = idleState;
         _actionState = actionState;
 
         _currentState = _idleState;
     }
 
-    public void SetPatrolPoints(SpawnPoint spawnPoint) =>
-        _patrolPoints = spawnPoint.GetPatrolPoints();
-
     private void ChangeState(IState newState)
     {
         _currentState = newState;
 
-        _rigidbody.velocity = Vector3.zero;
-        _rigidbody.angularVelocity = Vector3.zero;
-
         _animator.Play(AnimationKeys.IdleAnimationKey);
-
     }
 
     private void OnTriggerEnter(Collider other)

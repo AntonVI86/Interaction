@@ -389,6 +389,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _animator: {fileID: 9195743420845846693}
+  _sphereCollider: {fileID: -3933989150821381891}
 --- !u!54 &5000575037525211875
 Rigidbody:
   m_ObjectHideFlags: 0
