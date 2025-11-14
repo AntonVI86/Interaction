@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CharacterMover : IMoveable
+public class CharacterMover
 {
     public float Speed { get; private set; }
 
@@ -20,10 +20,5 @@ public class CharacterMover : IMoveable
         inputByCameraDirection.y = 0;
 
         _rigidbody.position += inputByCameraDirection * Time.deltaTime * Speed;
-    }
-
-    public void ResetVelocity()
-    {
-        throw new System.NotImplementedException();
     }
 }
