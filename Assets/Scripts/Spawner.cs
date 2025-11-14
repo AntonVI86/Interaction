@@ -9,6 +9,9 @@ public class Spawner : MonoBehaviour
     [SerializeField] private List<SpawnPoint> _points;
     [SerializeField] private List<EnemyStateHandler> _enemyPrefabs;
 
+    private IState _idleState;
+    private IState _actionState;
+
     private void Awake() =>
         Create();
     
@@ -17,9 +20,48 @@ public class Spawner : MonoBehaviour
         foreach (SpawnPoint point in _points)
         {
             int enemyIndex = Random.Range(0, _enemyPrefabs.Count);
+
             EnemyStateHandler enemy = Instantiate(_enemyPrefabs[enemyIndex], point.transform.position, Quaternion.identity);
+
             enemy.SetPatrolPoints(point);
-            enemy.Initialize(point.IdleType, point.ActionType, _target, point.transform);
+            SetState(enemy, point);
+
+            enemy.Initialize(_idleState, _actionState, _target, point.transform);
+        }
+    }
+
+    private void SetState(EnemyStateHandler enemy, SpawnPoint point)
+    {
+        switch (point.IdleType)
+        {
+            case IdleTypes.Idle:
+                _idleState = new IdleState(enemy.AnimatorPlayer);
+                break;
+            case IdleTypes.Patrol:
+                _idleState = new PatrolState(point.GetPatrolPoints(), enemy.transform, enemy.Mover, enemy.Rotator, enemy.AnimatorPlayer);
+                break;
+            case IdleTypes.RandomMove:
+                _idleState = new RandomMoveState(enemy.transform, point.transform, enemy.Mover, enemy.Rotator, enemy.AnimatorPlayer);
+                break;
+            default:
+                Debug.Log("Unknown Idle Type");
+                break;
+        }
+
+        switch (point.ActionType)
+        {
+            case ActionTypes.Chase:
+                _actionState = new ChaseState(_target.transform, enemy.transform, enemy.Mover, enemy.Rotator, enemy.AnimatorPlayer);
+                break;
+            case ActionTypes.Escape:
+                _actionState = new EscapeState(_target.transform, enemy.transform, enemy.Mover, enemy.Rotator, enemy.AnimatorPlayer);
+                break;
+            case ActionTypes.Death:
+                _actionState = new DeathState(enemy.gameObject, enemy.AnimatorPlayer);
+                break;
+            default:
+                Debug.Log("Unknown Action Type");
+                break;
         }
     }
 }

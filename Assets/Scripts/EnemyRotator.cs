@@ -4,12 +4,19 @@ public class EnemyRotator : IRotator
 {
     private float _rotationSpeed = 800f;
 
-    public void ProcessRotateTo(Vector3 direction, Transform transform)
+    private Transform _transform;
+
+    public EnemyRotator(Transform transform)
+    {
+        _transform = transform;
+    }
+
+    public void ProcessRotateTo(Vector3 direction)
     {
         Quaternion lookRotation = Quaternion.LookRotation(direction);
 
         float step = _rotationSpeed * Time.deltaTime;
 
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, lookRotation, step);
+        _transform.rotation = Quaternion.RotateTowards(_transform.rotation, lookRotation, step);
     }
 }

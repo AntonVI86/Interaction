@@ -26,12 +26,12 @@ public class PlayerCharacter : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
 
         _mover = new CharacterMover(_speed, _camera, _rigidbody);
-        _rotator = new CharacterRotator(_camera);
+        _rotator = new CharacterRotator(_camera, transform);
     }
 
     private void Update()
     {
-        _rotator.ProcessRotate(transform);
+        _rotator.ProcessRotate();
 
         _inputZ = Input.GetAxisRaw(VerticalAxe);
         _inputDirection = new Vector3(0, 0, _inputZ);

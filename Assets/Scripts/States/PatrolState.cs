@@ -6,41 +6,43 @@ public class PatrolState : IState
     private List<Transform> _points = new List<Transform>();
     private Queue<Vector3> _patrolPoints;
 
+    private Transform _transform;
     private Vector3 _targetPoint;
-    private Rigidbody _rigidbody;
 
-    private float _speed = 2f;
+    private IMoveable _mover;
+    private IRotator _rotator;
+
+    private Animator _animator;
+
     private float _deadZone = 0.05f;
 
-    private EnemyMover _enemyMover;
-    private EnemyRotator _enemyRotator;
-
-    public PatrolState(List<Transform> points, Rigidbody rigidbody)
+    public PatrolState(List<Transform> points, Transform transform, IMoveable movable, IRotator rotator, Animator animator)
     {
         _points = points;
+        _transform = transform;
 
-        _rigidbody = rigidbody;
+        _mover = movable;
+        _rotator = rotator;
+
+        _animator = animator;
 
         GetPatrolPoints();
-
-        _enemyMover = new EnemyMover(_speed, _rigidbody);
-        _enemyRotator = new EnemyRotator();
     }
 
-    public void ApplyState(Animator animator, Transform transform)
+    public void ApplyState()
     {
-        Vector3 direction = GetDistanceToTarget(transform);
+        Vector3 direction = GetDistanceToTarget();
 
-        animator.Play(AnimationKeys.WalkAnimationKey);
+        _animator.Play(AnimationKeys.WalkAnimationKey);
 
         if (direction.magnitude < _deadZone)
             SwitchTarget();
 
-        _enemyMover.ProcessMoveTo(direction.normalized);
-        _enemyRotator.ProcessRotateTo(direction, transform);
+        _mover.ProcessMoveTo(direction.normalized);
+        _rotator.ProcessRotateTo(direction);
     }
 
-    private Vector3 GetDistanceToTarget(Transform transform) => _targetPoint - transform.position;
+    private Vector3 GetDistanceToTarget() => _targetPoint - _transform.position;
 
     private void GetPatrolPoints()
     {

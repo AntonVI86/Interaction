@@ -2,8 +2,15 @@ using UnityEngine;
 
 public class IdleState : IState
 {
-    public void ApplyState(Animator animator, Transform transform)
+    private Animator _animator;
+
+    public IdleState(Animator animator)
     {
-        animator.Play(AnimationKeys.IdleAnimationKey);
+        _animator = animator;
+    }
+
+    public void ApplyState()
+    {
+        _animator.Play(AnimationKeys.IdleAnimationKey);
     }
 }

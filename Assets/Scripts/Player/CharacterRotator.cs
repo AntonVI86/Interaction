@@ -3,17 +3,19 @@ using UnityEngine;
 public class CharacterRotator
 {
     private Camera _camera;
+    private Transform _transform;
 
-    public CharacterRotator(Camera camera)
+    public CharacterRotator(Camera camera, Transform transform)
     {
         _camera = camera;
+        _transform = transform;
     }
 
-    public void ProcessRotate(Transform transform)
+    public void ProcessRotate()
     {
         Vector3 inputByCameraDirection = _camera.transform.forward;
         inputByCameraDirection.y = 0;
 
-        transform.rotation = Quaternion.LookRotation(inputByCameraDirection);
+        _transform.rotation = Quaternion.LookRotation(inputByCameraDirection);
     }
 }

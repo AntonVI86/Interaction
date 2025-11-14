@@ -2,35 +2,38 @@ using UnityEngine;
 
 public class ChaseState : IState
 {
-    private float _speed = 3f;
-
+    private Transform _transform;
     private Transform _target;
-    private Rigidbody _rigidbody;
+
+    private Animator _animator;
 
     private IMoveable _mover;
     private IRotator _rotator;
 
     private float _maxDistanceToChase = 10f;
 
-    public ChaseState(Transform target, Rigidbody rigidbody)
+    public ChaseState(Transform target, Transform transform, IMoveable mover, IRotator rotator, Animator animator)
     {
         _target = target;
-        _rigidbody = rigidbody;
 
-        _mover = new EnemyMover(_speed, _rigidbody);
-        _rotator = new EnemyRotator();
+        _transform = transform;
+
+        _mover = mover;
+        _rotator = rotator;
+
+        _animator = animator;
     }
 
-    public void ApplyState(Animator animator, Transform transform)
+    public void ApplyState()
     {
-        animator.Play(AnimationKeys.RunAnimationKey);
+        _animator.Play(AnimationKeys.RunAnimationKey);
 
-        Vector3 direction = _target.position - transform.position;
+        Vector3 direction = _target.position - _transform.position;
 
         if (direction.magnitude > _maxDistanceToChase)
             return;
 
         _mover.ProcessMoveTo(direction.normalized);
-        _rotator.ProcessRotateTo(direction, transform);
+        _rotator.ProcessRotateTo(direction);
     }
 }
